@@ -1,0 +1,26 @@
+PODS:
+  - MBProgressHUD (1.2.0)
+  - SDWebImage (5.12.0):
+    - SDWebImage/Core (= 5.12.0)
+  - SDWebImage/Core (5.12.0)
+  - SnapKit (5.0.1)
+
+DEPENDENCIES:
+  - MBProgressHUD (~> 1.2.0)
+  - SDWebImage (~> 5.0)
+  - SnapKit (~> 5.0.0)
+
+SPEC REPOS:
+  trunk:
+    - MBProgressHUD
+    - SDWebImage
+    - SnapKit
+
+SPEC CHECKSUMS:
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  SDWebImage: 4ea20cca2986adc5aacde07aa686742fd4c67a37
+  SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+
+PODFILE CHECKSUM: addc58bf4ba689423b21168640d69559280457ed
+
+COCOAPODS: 1.11.2
