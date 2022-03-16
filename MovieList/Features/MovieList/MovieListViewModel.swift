@@ -71,7 +71,7 @@ private extension MovieListViewModel {
 
     func reloadSections() {
         sections = [createSignerSection()]
-        view?.update(with: .hasData)
+        view?.update(with: .hasData(sections))
     }
 
     func createSignerSection() -> SectionSource {

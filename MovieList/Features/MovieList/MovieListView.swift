@@ -8,7 +8,7 @@ import UIKit
 final class MovieListView: UIView {
     private let appearance = Appearance()
     private let viewModel: MovieListViewModelProtocol
-    private var sections: [SectionSource] { viewModel.sections }
+    private var sections: [SectionSource] = []
     
     private lazy var searchBar = UISearchBar().with {
         $0.barTintColor = .black
@@ -45,7 +45,9 @@ final class MovieListView: UIView {
 
     func update(with state: State) {
         switch state {
-        case .hasData:
+        case let .hasData(sections):
+            self.sections = sections
+            
             tableView.isHidden = false
             tableView.reloadData()
         case .noData:
@@ -132,7 +134,7 @@ extension MovieListView: UIScrollViewDelegate {
 
 extension MovieListView {
     enum State {
-        case hasData
+        case hasData([SectionSource])
         case noData
     }
 }
@@ -142,7 +144,7 @@ extension MovieListView {
 private extension MovieListView {
     struct Appearance {
         let tableViewLeadingOffset: CGFloat = 18.0
-        let tableViewTrailingInset: CGFloat = 16.0
+        let tableViewTrailingInset: CGFloat = .gap_M
     }
 }
 

@@ -45,7 +45,7 @@ final class MovieListViewModelTests: QuickSpec {
             
             it("should update the view") {
                 expect(view.updateWithCallsCount).toEventually(equal(1), timeout: .seconds(1))
-                expect(view.updateWithReceivedState).toEventually(equal(.hasData), timeout: .seconds(1))
+                expect(view.updateWithReceivedState).toNotEventually(beNil(), timeout: .seconds(1))
             }
             
             it("should call loader") {
