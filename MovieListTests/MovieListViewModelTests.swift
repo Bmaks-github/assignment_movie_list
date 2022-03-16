@@ -113,6 +113,28 @@ final class MovieListViewModelTests: QuickSpec {
             }
         }
         
+        describe("when user pressed on movie cell") {
+            beforeEach {
+                movieListPaginator.fetchFirstMoviesCompletionClosure = { $0(.success(TestData.movieSearchResultDemo.results!)) }
+                worker.getGenreNamesListForGenresListReturnValue = TestData.demoGenreList
+                worker.getMarkBarValueMarkReturnValue = TestData.demoMarkBarValue
+                worker.getImageUrlForReturnValue = TestData.demoImageUrl
+                genresService.getGenresListCompletionClosure = { $0(.success(TestData.movieGenreListDemo)) }
+                
+                subject.viewLoaded()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    subject.sections.first!.cellsSources.first!.onSelectAction!()
+                }
+            }
+            
+            it("should open movie detail screen") {
+                expect(router.openMovieDetailWithCallsCount).toEventually(equal(1), timeout: .seconds(1))
+                expect(router.openMovieDetailWithReceivedMovieDetail?.id)
+                    .toEventually(equal(TestData.movieSearchResultDemo.results!.first?.id), timeout: .seconds(1))
+            }
+        }
+        
         func createSubject() -> MovieListViewModel {
             let viewModel = MovieListViewModel(
                 router: router,
