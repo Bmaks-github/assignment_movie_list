@@ -8,7 +8,7 @@
 import UIKit
 import SDWebImage
 
-public final class MovieListTableViewCell: UITableViewCell {
+final class MovieListTableViewCell: UITableViewCell {
     private let appearence = Appearence()
 
     private lazy var movieTitleLabel = UILabel().with {
@@ -136,7 +136,7 @@ private extension MovieListTableViewCell {
 
 // MARK: - Model
 
-public extension MovieListTableViewCell {
+extension MovieListTableViewCell {
     struct Model {
         let title: String
         let imageUrl: URL?
@@ -149,7 +149,7 @@ public extension MovieListTableViewCell {
 // MARK: - TableViewAdaptableModelProtocol
 
 extension MovieListTableViewCell.Model: TableViewAdaptableModelProtocol {
-    public func cell(at _: IndexPath, for tableView: UITableView) -> UITableViewCell {
+    func cell(at _: IndexPath, for tableView: UITableView) -> UITableViewCell {
         let cell: MovieListTableViewCell = tableView.dequeueReusableCell()
         cell.update(model: self)
         return cell

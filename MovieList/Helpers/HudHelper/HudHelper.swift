@@ -7,20 +7,20 @@
 
 import MBProgressHUD
 
-public final class HudHelper: NSObject {
-    public static let shared = HudHelper()
+final class HudHelper: NSObject {
+    static let shared = HudHelper()
 
     private var currentHud: MBProgressHUD
     private var hudWindow: UIWindow!
     private var counter: Int = 0
 
-    public func set(isLoading: Bool) {
+    func set(isLoading: Bool) {
         isLoading
             ? showHud()
             : dismissHud()
     }
 
-    public static var defaultHud: MBProgressHUD {
+    static var defaultHud: MBProgressHUD {
         let hud = MBProgressHUD()
         hud.mode = .indeterminate
 
@@ -86,7 +86,7 @@ private extension HudHelper {
 }
 
 extension HudHelper: MBProgressHUDDelegate {
-    public func hudWasHidden(_: MBProgressHUD) {
+    func hudWasHidden(_: MBProgressHUD) {
         if counter <= 0 {
             hudWindow.isHidden = true
         }

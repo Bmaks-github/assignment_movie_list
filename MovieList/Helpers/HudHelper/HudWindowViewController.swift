@@ -7,13 +7,13 @@
 
 import UIKit
 
-public final class HudWindowViewController: UIViewController {
+final class HudWindowViewController: UIViewController {
     private var mainRootViewController: UIViewController? {
         let window = UIApplication.shared.keyWindow
         return window?.rootViewController
     }
 
-    override public var childForStatusBarStyle: UIViewController? {
+    override var childForStatusBarStyle: UIViewController? {
         mainRootViewController
     }
 }

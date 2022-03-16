@@ -7,13 +7,13 @@
 
 import UIKit
 
-public struct SectionSource {
-    public struct CellSource {
-        public let model: TableViewAdaptableModelProtocol
-        public let onSelectAction: Action?
-        public let trailingSwipeActions: [UIContextualAction]
+struct SectionSource {
+    struct CellSource {
+        let model: TableViewAdaptableModelProtocol
+        let onSelectAction: Action?
+        let trailingSwipeActions: [UIContextualAction]
 
-        public init(
+        init(
             model: TableViewAdaptableModelProtocol,
             onSelectAction: Action? = nil,
             trailingSwipeActions: [UIContextualAction] = []
@@ -24,11 +24,11 @@ public struct SectionSource {
         }
     }
 
-    public let cellsSources: [CellSource]
-    public let headerModel: TableHeaderFooterViewAdaptableModelProtocol?
-    public let footerModel: TableHeaderFooterViewAdaptableModelProtocol?
+    let cellsSources: [CellSource]
+    let headerModel: TableHeaderFooterViewAdaptableModelProtocol?
+    let footerModel: TableHeaderFooterViewAdaptableModelProtocol?
 
-    public init(
+    init(
         cellsSources: [CellSource],
         headerModel: TableHeaderFooterViewAdaptableModelProtocol? = nil,
         footerModel: TableHeaderFooterViewAdaptableModelProtocol? = nil
@@ -39,7 +39,7 @@ public struct SectionSource {
     }
 }
 
-public extension SectionSource {
+extension SectionSource {
     static var empty: SectionSource {
         return SectionSource(
             cellsSources: [],

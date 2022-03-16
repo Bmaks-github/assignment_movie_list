@@ -7,6 +7,6 @@
 
 import UIKit
 
-public protocol TableHeaderFooterViewAdaptableModelProtocol: Any {
+protocol TableHeaderFooterViewAdaptableModelProtocol: Any {
     func headerFooter(tableView: UITableView) -> UIView
 }
