@@ -13,16 +13,16 @@ final class MovieListFactory: MovieListFactoryProtocol {
         let transitionHandler = TransitionableProxy()
         
         let router = MovieListRouter(transitionHandler: transitionHandler)
-        let movieSearchService = SearchService()
-//        let movieImageService = MovieImageService()
-        let movieGenresService = GenresService()
-        let movieListPaginator = MovieListPaginator(service: movieSearchService)
+        let searchService = SearchService()
+        let moviesService = MoviesService()
+        let genresService = GenresService()
+        let movieListPaginator = MovieListPaginator(searchService: searchService, movieService: moviesService)
+        let movieListWorker = MovieListWorker()
         
         let viewModel = MovieListViewModel(
             router: router,
-//            movieSearchService: movieSearchService,
-//            movieImageService: movieImageService,
-            movieGenresService: movieGenresService,
+            worker: movieListWorker,
+            genresService: genresService,
             movieListPaginator: movieListPaginator
         )
         

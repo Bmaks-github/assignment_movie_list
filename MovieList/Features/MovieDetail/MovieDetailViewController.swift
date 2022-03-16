@@ -4,6 +4,7 @@
 
 import UIKit
 
+// sourcery: AutoMockable
 protocol MovieDetailViewProtocol: LoaderPresentable {
     func update(with model: MovieDetailViewController.Model)
 }
@@ -31,24 +32,33 @@ final class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupNavigationBar()
+        
         viewModel.viewLoaded()
-        
-//        navigationController?.navigationBar.barTintColor = .green
-        
-        navigationController?.navigationBar.tintColor = .orange
     }
-    
+}
+
+// MARK: - Private methods
+
+private extension MovieDetailViewController {
     func setupRightNavBarItem(with text: String) {
         rightBarItemLabel.text = text
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarItemLabel)
     }
     
     func setupNavBarTitle(with title: String) {
         self.title = title
     }
+    
+    func setupNavigationBar() {
+        navigationController?.navigationBar.tintColor = .orange
+    }
 }
 
 // MARK: - MovieDetailViewProtocol
+
 extension MovieDetailViewController: MovieDetailViewProtocol {
     func update(with model: MovieDetailViewController.Model) {
         setupNavBarTitle(with: model.title)

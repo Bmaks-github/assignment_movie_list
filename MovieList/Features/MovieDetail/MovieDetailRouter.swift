@@ -2,9 +2,8 @@
 //  Created by Maksym Bura on 09.03.2022.
 //
 
-protocol MovieDetailRouterProtocol: AnyObject {
-    
-}
+// sourcery: AutoMockable
+protocol MovieDetailRouterProtocol: AnyObject { }
 
 final class MovieDetailRouter: MovieDetailRouterProtocol {
     private let transitionHandler: Transitionable

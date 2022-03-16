@@ -12,22 +12,22 @@ final class MovieListView: UIView {
     
     private lazy var searchBar = UISearchBar().with {
         $0.barTintColor = .black
-        $0.searchTextField.leftView?.tintColor = UIColor(red: 142.0/256.0, green: 142.0/256.0, blue: 147.0/256.0, alpha: 1)
-        $0.searchTextField.textColor = UIColor(red: 142.0/256.0, green: 142.0/256.0, blue: 147.0/256.0, alpha: 1)
-        $0.searchTextField.placeholder = "Search"
+        $0.searchTextField.leftView?.tintColor = .mlLightGray
+        $0.searchTextField.textColor = .mlLightGray
+        $0.searchTextField.placeholder = NSLocalizedString("Search", comment: "")
         $0.delegate = self
     }
     
     private lazy var tableView = UITableView().with {
         $0.register(MovieListTableViewCell.self)
         $0.rowHeight = UITableView.automaticDimension
-        $0.backgroundColor = UIColor(red: 28.0/256.0, green: 28.0/256.0, blue: 30.0/256.0, alpha: 1)
+        $0.backgroundColor = .mlDarkGray
         $0.tableFooterView = UIView()
         $0.separatorStyle = .none
         $0.delegate = self
         $0.dataSource = self
         $0.layer.cornerRadius = 10
-        $0.layer.maskedCorners = [.layerMinXMinYCorner,.layerMaxXMinYCorner]
+        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.isHidden = true
     }
 
@@ -38,6 +38,7 @@ final class MovieListView: UIView {
         commonInit()
     }
     
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -54,6 +55,7 @@ final class MovieListView: UIView {
 }
 
 // MARK: - Private methods
+
 private extension MovieListView {
     func commonInit() {
         setupSubviews()
@@ -69,12 +71,12 @@ private extension MovieListView {
         searchBar.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
-            make.top.equalToSuperview().offset(28 + 64)
+            make.top.equalTo(safeAreaLayoutGuide)
         }
         
         tableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(18)
-            make.trailing.equalToSuperview().inset(16)
+            make.leading.equalToSuperview().offset(appearance.tableViewLeadingOffset)
+            make.trailing.equalToSuperview().inset(appearance.tableViewTrailingInset)
             make.top.equalTo(searchBar.snp.bottom)
             make.bottom.equalToSuperview()
         }
@@ -133,16 +135,14 @@ extension MovieListView {
         case hasData
         case noData
     }
-    
-    struct Model {
-        
-    }
 }
 
 // MARK: - Appearance
+
 private extension MovieListView {
     struct Appearance {
-
+        let tableViewLeadingOffset: CGFloat = 18.0
+        let tableViewTrailingInset: CGFloat = 16.0
     }
 }
 

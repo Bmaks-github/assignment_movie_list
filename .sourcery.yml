@@ -1,0 +1,8 @@
+sources:
+  - MovieList
+templates:
+  - Templates/Sourcery/AutoMockable.stencil
+output:
+    MovieListTests/AutoMockable.generated.swift
+args:
+  app: MovieList

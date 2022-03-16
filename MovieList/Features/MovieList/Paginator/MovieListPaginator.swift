@@ -9,82 +9,56 @@ import Foundation
 
 // sourcery: AutoMockable
 protocol MovieListPaginatorProtocol: AnyObject {
-    func selectSearchMovieFilter(movieName: String)
-    func fetchFirstMovies(completion: @escaping ResultHandler<[MovieSearchDetail]>)
-//    func fetchDocuments(completion: @escaping ResultHandler<[Document]>)
-    func fetchNextMovies(completion: @escaping ResultHandler<[MovieSearchDetail]>)
+    func selectMode(mode: MovieListPaginator.Mode)
+    func fetchFirstMovies(completion: @escaping ResultHandler<[MovieDetail]>)
+    func fetchNextMovies(completion: @escaping ResultHandler<[MovieDetail]>)
 }
 
-final class MovieListPaginator: MovieListPaginatorProtocol {
+final class MovieListPaginator {
     // MARK: - Properties
 
-//    private let constants = PaginatorConstants()
     private var totalPagesCount: Int = 1
     private var currentPage: Int = 1
-
     private var movieName: String = ""
-//    private var documentTypes: [DocumentType]
-//    private var fromDate: Date?
-//    private var toDate: Date?
-//    private var contractorInn: String?
-
     private var isFetching: Bool = false
+    private var activeMode: Mode = .popularMovies
 
     // MARK: - Dependencies
 
-    private let service: SearchServiceProtocol
+    private let searchService: SearchServiceProtocol
+    private let movieService: MoviesServiceProtocol
 
     // MARK: - Lifecycle
 
     init(
-        service: SearchServiceProtocol
+        searchService: SearchServiceProtocol,
+        movieService: MoviesServiceProtocol
     ) {
-        self.service = service
-//
-//        documentTypes = constants.standartDocumentTypes
-//
-//        if isDocumentFlowInvoicesEnabled {
-//            documentTypes.append(contentsOf: constants.invoicesDocumentTypes)
-//        }
+        self.searchService = searchService
+        self.movieService = movieService
     }
+}
 
-    // MARK: - DocumentFlowDashboardPaginatorProtocol
+// MARK: - MovieListPaginatorProtocol
 
-    func selectSearchMovieFilter(movieName: String) {
-//        self.documentTypes = documentTypes
-//        fromDate = datePeriod?.fromDate
-//        toDate = datePeriod?.toDate
-//        self.contractorInn = contractorInn
-
-        // сброс пагинатора для новых типов документов и фильтров
-        self.movieName = movieName
+extension MovieListPaginator: MovieListPaginatorProtocol {
+    func selectMode(mode: Mode) {
+        activeMode = mode
         isFetching = false
-//        currentPage = constants.startingPage
-//        didChangeBlock?()
     }
-
-    func fetchFirstMovies(completion: @escaping ResultHandler<[MovieSearchDetail]>) {
+    
+    func fetchFirstMovies(completion: @escaping ResultHandler<[MovieDetail]>) {
         currentPage = 1
         
-        searchMovie(
+        fetchMovie(
             page: currentPage,
             fetchNewPage: false,
             completion: completion
         )
     }
 
-//    func fetchMovies(completion: @escaping ResultHandler<MovieSearchResult>) {
-//        getDocuments(
-//            page: currentPage,
-//            perPageResults: resultsPerPageCount,
-//            docTypes: documentTypes,
-//            fetchNewPage: false,
-//            completion: completion
-//        )
-//    }
-
-    func fetchNextMovies(completion: @escaping ResultHandler<[MovieSearchDetail]>) {
-        searchMovie(
+    func fetchNextMovies(completion: @escaping ResultHandler<[MovieDetail]>) {
+        fetchMovie(
             page: currentPage + 1,
             fetchNewPage: true,
             completion: completion
@@ -92,13 +66,13 @@ final class MovieListPaginator: MovieListPaginatorProtocol {
     }
 }
 
-private extension MovieListPaginator {
-    // MARK: - Service private methods
+// MARK: - Private methods
 
-    func searchMovie(
+private extension MovieListPaginator {
+    func fetchMovie(
         page: Int,
         fetchNewPage: Bool,
-        completion: @escaping ResultHandler<[MovieSearchDetail]>
+        completion: @escaping ResultHandler<[MovieDetail]>
     ) {
         if fetchNewPage, currentPage > totalPagesCount {
             return
@@ -112,10 +86,23 @@ private extension MovieListPaginator {
         
         let pageString = String(page)
 
-        service.searchMovieList(
-            movieName: movieName,
-            page: pageString
-        ) { [weak self] result in
+        switch activeMode {
+        case let .searchMovie(movieName):
+            searchService.searchMovieList(
+                movieName: movieName,
+                page: pageString
+            ) { [weak self] result in
+                    self?.isFetching = false
+
+                    self?.parseResult(
+                        page: page,
+                        fetchNewPage: fetchNewPage,
+                        result: result,
+                        completion: completion
+                    )
+                }
+        case .popularMovies:
+            movieService.getPopularMovies(page: pageString) { [weak self] result in
                 self?.isFetching = false
 
                 self?.parseResult(
@@ -125,13 +112,14 @@ private extension MovieListPaginator {
                     completion: completion
                 )
             }
+        }
     }
 
     func parseResult(
         page: Int,
         fetchNewPage: Bool,
         result: Result<MovieSearchResult, Error>,
-        completion: @escaping ResultHandler<[MovieSearchDetail]>
+        completion: @escaping ResultHandler<[MovieDetail]>
     ) {
         switch result {
         case let .success(response):
@@ -148,12 +136,9 @@ private extension MovieListPaginator {
     }
 }
 
-//private extension DocumentFlowDashboardPaginator {
-//    struct PaginatorConstants {
-//        let resultsPerPage: Int = 10
-//        let startingPage: Int = 1
-//        let standartDocumentTypes: [DocumentType] = [.acts, .calcInvoices, .consignmentNotes]
-//        let invoicesDocumentTypes: [DocumentType] = [.invoiceIncoming, .invoiceOutcoming]
-//    }
-//}
-
+extension MovieListPaginator {
+    enum Mode: Equatable {
+        case searchMovie(String)
+        case popularMovies
+    }
+}

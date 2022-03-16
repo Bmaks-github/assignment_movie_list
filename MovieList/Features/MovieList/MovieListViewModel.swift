@@ -17,42 +17,46 @@ final class MovieListViewModel {
     weak var view: MovieListViewProtocol?
     
     private let router: MovieListRouterProtocol
-//    private let movieSearchService: MovieSearchServiceProtocol
-//    private let movieImageService: MovieImageServiceProtocol
-    private let movieGenresService: GenresServiceProtocol
+    private let worker: MovieListWorkerProtocol
+    private let genresService: GenresServiceProtocol
     private let movieListPaginator: MovieListPaginatorProtocol
     
     private(set) var sections: [SectionSource] = []
     private(set) var genresList: MovieGenresList?
-    private var subjects: [MovieSearchDetail] = []
+    private var subjects: [MovieDetail] = []
     private var debounceTimer: Timer?
     
     init(
         router: MovieListRouterProtocol,
-//        movieSearchService: MovieSearchServiceProtocol,
-//        movieImageService: MovieImageServiceProtocol,
-        movieGenresService: GenresServiceProtocol,
+        worker: MovieListWorkerProtocol,
+        genresService: GenresServiceProtocol,
         movieListPaginator: MovieListPaginatorProtocol
     ) {
         self.router = router
-//        self.movieSearchService = movieSearchService
-//        self.movieImageService = movieImageService
-        self.movieGenresService = movieGenresService
+        self.worker = worker
+        self.genresService = genresService
         self.movieListPaginator = movieListPaginator
     }
-    
+}
+
+// MARK: -  Private methods
+private extension MovieListViewModel {
     func createCells() -> [SectionSource.CellSource] {
         var cells: [SectionSource.CellSource] = []
         cells.append(
             contentsOf:
                 subjects.compactMap { movieSearchDetail in
                     
+                    let imageUrl = worker.getImageUrl(for: movieSearchDetail.posterPath)
+                    let genreListString = worker.getGenreNamesList(for: movieSearchDetail.genreIds, genresList: genresList).uppercased()
+                    let markBarValue = worker.getMarkBarValue(mark: movieSearchDetail.voteAverage)
+                    
                     return SectionSource.CellSource(
                         model: MovieListTableViewCell.Model(
                             title: movieSearchDetail.title,
-                            imageUrl: getImageUrl(for: movieSearchDetail.posterPath),
-                            genre: getGenreNamesList(from: movieSearchDetail.genreIds),
-                            markBarValue: convertToMarkBarValue(mark: movieSearchDetail.voteAverage),
+                            imageUrl: imageUrl,
+                            genre: genreListString,
+                            markBarValue: markBarValue,
                             mark: String(movieSearchDetail.voteAverage)
                         ),
                         onSelectAction: { [weak self] in
@@ -67,7 +71,7 @@ final class MovieListViewModel {
 
     func reloadSections() {
         sections = [createSignerSection()]
-        view?.update(with: .init())
+        view?.update(with: .hasData)
     }
 
     func createSignerSection() -> SectionSource {
@@ -80,45 +84,41 @@ final class MovieListViewModel {
     
     func loadMovieGenresList() {
         view?.setLoading(true)
-        movieGenresService.getGenresList { [weak self] result in
+        genresService.getGenresList { [weak self] result in
             self?.view?.setLoading(false)
             
             switch result {
             case let .success(list):
                 self?.genresList = list
+                self?.loadPopularMovies()
             case .failure(_):
                 break
             }
         }
     }
     
-    func getGenreNamesList(from genreIds: [Int]) -> String {
-        var resultGenreList = [String?]()
-        
-        for genreId in genreIds {
-            let genre = genresList?.genres.filter { $0.id == genreId }.first
-            resultGenreList.append(genre?.name)
+    func loadPopularMovies() {
+        view?.setLoading(true)
+        movieListPaginator.selectMode(mode: .popularMovies)
+        movieListPaginator.fetchFirstMovies { [weak self] result in
+            DispatchQueue.main.async {
+                self?.view?.setLoading(false)
+                
+                switch result {
+                case let .success(movies):
+                    self?.subjects = movies
+                    self?.reloadSections()
+                case .failure(_):
+                    break
+                }
+            }
         }
-        
-        let resultList = resultGenreList.compactMap { $0 }.joined(separator: ", ")
-        
-        return resultList
-    }
-    
-    func convertToMarkBarValue(mark: Double) -> Float {
-        return Float(mark) / 10.0
-    }
-    
-    func getImageUrl(for posterPath: String?) -> URL? {
-        guard let posterPath = posterPath else { return nil }
-
-        let url = URL(string: Constants.Domain.imageBaseUrl + posterPath)
-        
-        return url
     }
 }
 
-// MARK:  MovieListViewModelProtocol
+
+// MARK: -  MovieListViewModelProtocol
+
 extension MovieListViewModel: MovieListViewModelProtocol {
     func viewLoaded() {
         loadMovieGenresList()
@@ -128,8 +128,8 @@ extension MovieListViewModel: MovieListViewModelProtocol {
         guard let text = text else { return }
         
         debounceTimer?.invalidate()
-        debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { [weak self]  _ in
-            self?.movieListPaginator.selectSearchMovieFilter(movieName: text)
+        debounceTimer = Timer.scheduledTimer(withTimeInterval: Constants.Debouncer.delayInSeconds, repeats: false) { [weak self]  _ in
+            self?.movieListPaginator.selectMode(mode: .searchMovie(text))
             self?.movieListPaginator.fetchFirstMovies { result in
                 DispatchQueue.main.async {
                     switch result {

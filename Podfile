@@ -12,7 +12,9 @@ target 'MovieList' do
 
   target 'MovieListTests' do
     inherit! :search_paths
-    # Pods for testing
+    pod 'Nimble'
+    pod 'Quick'
+    pod 'Sourcery'
   end
 
   target 'MovieListUITests' do

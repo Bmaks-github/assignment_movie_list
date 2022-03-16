@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  MovieList
+
+  Created by Maksym Bura on 15.03.2022.
+  
+*/
+
+"Search" = "Search";
+"Movies" = "🍿 Movies";
+"Overview" = "Overview";
+"Cast" =  "Cast";

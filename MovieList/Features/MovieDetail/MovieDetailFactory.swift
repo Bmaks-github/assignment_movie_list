@@ -13,9 +13,11 @@ final class MovieDetailFactory: MovieDetailFactoryProtocol {
         let transitionHandler = TransitionableProxy()
         
         let router = MovieDetailRouter(transitionHandler: transitionHandler)
+        let worker = MovieListWorker()
         
         let viewModel = MovieDetailViewModel(
             router: router,
+            worker: worker,
             movieDetail: context.movieSearchDetail
         )
         
@@ -29,6 +31,6 @@ final class MovieDetailFactory: MovieDetailFactoryProtocol {
 
 extension MovieDetailFactory {
     struct Context {
-        let movieSearchDetail: MovieSearchDetail
+        let movieSearchDetail: MovieDetail
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 
+// sourcery: AutoMockable
 public protocol Transitionable: AnyObject {
     func push(controller: UIViewController, animated: Bool)
     func pop(animated: Bool)

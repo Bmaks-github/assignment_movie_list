@@ -12,33 +12,31 @@ final class MovieDetailViewModel {
     weak var view: MovieDetailViewProtocol?
     
     private let router: MovieDetailRouterProtocol
-    private let movieDetail: MovieSearchDetail
+    private let worker: MovieListWorkerProtocol
+    private let movieDetail: MovieDetail
     
     init(
         router: MovieDetailRouterProtocol,
-        movieDetail: MovieSearchDetail
+        worker: MovieListWorkerProtocol,
+        movieDetail: MovieDetail
     ) {
         self.router = router
+        self.worker = worker
         self.movieDetail = movieDetail
-    }
-    
-    func getImageUrl(for posterPath: String?) -> URL? {
-        guard let posterPath = posterPath else { return nil }
-
-        let url = URL(string: Constants.Domain.imageBaseUrl + posterPath)
-        
-        return url
     }
 }
 
 // MARK:  MovieDetailViewModelProtocol
 extension MovieDetailViewModel: MovieDetailViewModelProtocol {
     func viewLoaded() {
+        let rightNavBarText = String(format: "%.1f %@", movieDetail.voteAverage, "\u{1F3C6}")
+        let imageUrl = worker.getImageUrl(for: movieDetail.posterPath)
+        
         view?.update(with: .init(
             title: movieDetail.title,
-            rightNavBarText: String(format: "%.1f %@", movieDetail.voteAverage, "\u{1F3C6}"),
+            rightNavBarText: rightNavBarText,
             viewModel: .init(
-                posterImageUrl: getImageUrl(for: movieDetail.posterPath),
+                posterImageUrl: imageUrl,
                 overviewText: movieDetail.overview
             ))
         )

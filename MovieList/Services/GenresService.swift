@@ -7,32 +7,15 @@
 
 import Foundation
 
+// sourcery: AutoMockable
 protocol GenresServiceProtocol {
     func getGenresList(completion: @escaping ResultHandler<MovieGenresList>)
 }
 
-final class GenresService {
-    let networkProvider: NetworkProvider
-    
-    init() {
-        networkProvider = .init(path: "/genre")
+final class GenresService: ServiceProtocol {
+    var networkProvider: NetworkProvider {
+        .init(path: "/genre")
     }
-
-//    private var endpointURL: String {
-//        let path: String = "/genre/movie/list"
-//        
-//        return Constants.Domain.baseUrl + path
-//    }
-//
-//    private func constructBasicUrl() -> URL? {
-//        var urlComps = URLComponents(string: endpointURL)
-//        
-//        let queryItems = [URLQueryItem(name: "api_key", value: Constants.Domain.apiKey)]
-//
-//        urlComps?.queryItems = queryItems
-//        
-//        return urlComps?.url
-//    }
 }
 
 extension GenresService: GenresServiceProtocol {

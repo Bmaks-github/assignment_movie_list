@@ -20,12 +20,9 @@ public final class HudHelper: NSObject {
             : dismissHud()
     }
 
-    // Используется в алертах
     public static var defaultHud: MBProgressHUD {
         let hud = MBProgressHUD()
         hud.mode = .indeterminate
-//        hud.label.text = L10n.Hud.Label.Title.loading
-//        hud.detailsLabel.text = L10n.Hud.Label.detail
 
         return hud
     }
@@ -34,10 +31,6 @@ public final class HudHelper: NSObject {
 
     override private init() {
         hudWindow = UIWindow(windowScene: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-//        hudWindow = UIWindow(frame: UIScreen.main.bounds)
-//        if let currentWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-//            hudWindow = UIWindow(windowScene: currentWindowScene)
-//        }
         
         currentHud = MBProgressHUD()
         
@@ -72,8 +65,6 @@ private extension HudHelper {
         let hud = MBProgressHUD.showAdded(to: hudWindow, animated: true)
         hud.delegate = self
         hud.mode = .indeterminate
-//        hud.backgroundColor = .gray
-//        hud.backgroundView.backgroundColor = .red
         hud.contentColor = .white
         hud.bezelView.style = .solidColor
         hud.bezelView.color = .clear
