@@ -73,8 +73,8 @@ final class MovieListViewModelTests: QuickSpec {
         describe("when search bar text changed") {
             beforeEach {
                 movieListPaginator.fetchFirstMoviesCompletionClosure = { $0(.success(TestData.movieSearchResultDemo.results!)) }
-                worker.getGenreNamesListForGenresListReturnValue = "HORROR"
-                worker.getMarkBarValueMarkReturnValue = 8.0
+                worker.getGenreNamesListForGenresListReturnValue = TestData.demoGenreList
+                worker.getMarkBarValueMarkReturnValue = TestData.demoMarkBarValue
                 
                 subject.searchBarTextChanged(text: TestData.searchBarTextDemo)
             }
@@ -97,8 +97,8 @@ final class MovieListViewModelTests: QuickSpec {
             beforeEach {
                 movieListPaginator.fetchFirstMoviesCompletionClosure = { $0(.success(TestData.movieSearchResultDemo.results!)) }
                 movieListPaginator.fetchNextMoviesCompletionClosure = { $0(.success(TestData.movieSearchResultDemo.results!)) }
-                worker.getGenreNamesListForGenresListReturnValue = "HORROR"
-                worker.getMarkBarValueMarkReturnValue = 8.0
+                worker.getGenreNamesListForGenresListReturnValue = TestData.demoGenreList
+                worker.getMarkBarValueMarkReturnValue = TestData.demoMarkBarValue
 
                 subject.searchBarTextChanged(text: TestData.searchBarTextDemo)
                 subject.requestedMoreMovies()
