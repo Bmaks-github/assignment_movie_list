@@ -6,21 +6,21 @@
 //
 
 struct MovieDetail: Codable {
-    let posterPath: String?
+    let id: Int
     let adult: Bool
     let overview: String
-    let releaseDate: String?
     let genreIds: [Int]
-    let id: Int
     let originalTitle: String
     let originalLanguage: String
     let title: String
-    let backdropPath: String?
     let popularity: Double
     let voteCount: Int
     let video: Bool
     let voteAverage: Double
-    
+    let posterPath: String?
+    let releaseDate: String?
+    let backdropPath: String?
+
     enum CodingKeys: String, CodingKey {
         case posterPath = "poster_path"
         case adult

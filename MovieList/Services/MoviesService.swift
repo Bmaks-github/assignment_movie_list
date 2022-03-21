@@ -24,21 +24,10 @@ extension MoviesService: MoviesServiceProtocol {
         networkProvider.getData(
             with: "/popular",
             params: [
-                URLQueryItem(name: "page", value: page)
-            ]
-        ) { result in
-            switch result {
-            case let .success(data):
-                do {
-                    let result = try JSONDecoder().decode(MovieSearchResult.self, from: data)
-                    completion(.success(result))
-                } catch {
-                    completion(.failure(NSError.commonError))
-                }
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
+                "page": page
+            ],
+            completion: completion
+        )
     }
 }
 

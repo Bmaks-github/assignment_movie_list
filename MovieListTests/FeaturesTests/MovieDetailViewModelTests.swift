@@ -12,7 +12,7 @@ final class MovieDetailViewModelTests: QuickSpec {
         var subject: MovieDetailViewModel!
         var view: MovieDetailViewProtocolMock!
         var router: MovieDetailRouterProtocolMock!
-        var worker: MovieListWorkerProtocolMock!
+        var worker: MovieParamsParserProtocolMock!
         
         beforeEach {
             view = .init()
@@ -64,24 +64,24 @@ private extension MovieDetailViewModelTests {
         
         static let movieSearchResultDemo = MovieSearchResult(
             page: 1,
+            totalResults: 20,
+            totalPages: 2,
             results: [MovieDetail(
-                posterPath: "/path",
+                id: 1,
                 adult: true,
                 overview: "overview",
-                releaseDate: nil,
                 genreIds: [1],
-                id: 1,
                 originalTitle: "Original title",
                 originalLanguage: "Original language",
                 title: "Title",
-                backdropPath: "/backdrop_path",
                 popularity: 8.0,
                 voteCount: 234,
                 video: false,
-                voteAverage: 9.0
-            )],
-            totalResults: 20,
-            totalPages: 2
+                voteAverage: 9.0,
+                posterPath: "/path",
+                releaseDate: nil,
+                backdropPath: "/backdrop_path"
+            )]
         )
     }
 }

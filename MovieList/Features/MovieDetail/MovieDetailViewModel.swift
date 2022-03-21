@@ -12,12 +12,12 @@ final class MovieDetailViewModel {
     weak var view: MovieDetailViewProtocol?
     
     private let router: MovieDetailRouterProtocol
-    private let worker: MovieListWorkerProtocol
+    private let worker: MovieParamsParserProtocol
     private let movieDetail: MovieDetail
     
     init(
         router: MovieDetailRouterProtocol,
-        worker: MovieListWorkerProtocol,
+        worker: MovieParamsParserProtocol,
         movieDetail: MovieDetail
     ) {
         self.router = router

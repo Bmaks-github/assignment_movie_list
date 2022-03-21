@@ -16,6 +16,7 @@ final class TransitionableProxy: Transitionable {
     }
 
     func pop(animated: Bool) {
-        wrapped?.navigationController?.popViewController(animated: animated)
+        let navigationController = wrapped?.navigationController ?? wrapped as? UINavigationController
+        navigationController?.popViewController(animated: animated)
     }
 }

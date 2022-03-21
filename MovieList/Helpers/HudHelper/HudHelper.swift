@@ -6,12 +6,13 @@
 //
 
 import MBProgressHUD
+import UIKit
 
 final class HudHelper: NSObject {
     static let shared = HudHelper()
 
     private var currentHud: MBProgressHUD
-    private var hudWindow: UIWindow!
+    private var hudWindow: UIWindow
     private var counter: Int = 0
 
     func set(isLoading: Bool) {
@@ -55,7 +56,7 @@ private extension HudHelper {
 
     // MARK: - Show Hud
 
-    func showHud() {
+    func showHud(appearance: Appearance = Appearance()) {
         counter = max(0, counter + 1)
 
         if counter > 1 {
@@ -64,19 +65,21 @@ private extension HudHelper {
 
         let hud = MBProgressHUD.showAdded(to: hudWindow, animated: true)
         hud.delegate = self
-        hud.mode = .indeterminate
-        hud.contentColor = .white
-        hud.bezelView.style = .solidColor
-        hud.bezelView.color = .clear
+        hud.mode = appearance.mode
+        hud.contentColor = appearance.contentColor
+        hud.bezelView.style = appearance.bezelViewStyle
+        hud.bezelView.color = appearance.bezelViewColor
         currentHud = hud
         hudWindow.isHidden = false
     }
 
     // MARK: - Dismiss Hud
 
+    /// Called on the main thread
     func dismissHud() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            
             self.counter = max(0, self.counter - 1)
             if self.counter == 0 {
                 self.currentHud.hide(animated: true)
@@ -84,6 +87,19 @@ private extension HudHelper {
         }
     }
 }
+
+// MARK: - Appearance
+
+extension HudHelper {
+    struct Appearance {
+        let mode: MBProgressHUDMode = .indeterminate
+        let contentColor: UIColor = .white
+        let bezelViewStyle: MBProgressHUDBackgroundStyle = .solidColor
+        let bezelViewColor: UIColor = .clear
+    }
+}
+
+// MARK: - MBProgressHUDDelegate
 
 extension HudHelper: MBProgressHUDDelegate {
     func hudWasHidden(_: MBProgressHUD) {

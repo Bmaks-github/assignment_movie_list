@@ -7,9 +7,9 @@ import Quick
 
 @testable import MovieList
 
-final class MovieListWorkerTests: QuickSpec {
+final class MovieParamsParserTests: QuickSpec {
     override func spec() {
-        var subject: MovieListWorker!
+        var subject: MovieParamsParser!
         
         beforeEach {
             subject = .init()
@@ -65,7 +65,7 @@ final class MovieListWorkerTests: QuickSpec {
     }
 }
 
-private extension MovieListWorkerTests {
+private extension MovieParamsParserTests {
     enum TestData {
         static let mark: Double = 8.0
         static let imagePath: String = "/12345"

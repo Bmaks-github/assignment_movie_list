@@ -6,7 +6,7 @@ import UIKit
 import SDWebImage
 
 final class MovieDetailView: UIView {
-    private let appearance = Appearance()
+    private let appearance: Appearance
     
     private lazy var scrollView = UIScrollView()
     
@@ -31,7 +31,9 @@ final class MovieDetailView: UIView {
         $0.text = NSLocalizedString("Cast", comment: "")
     }
     
-    init() {
+    init(appearance: Appearance = .init()) {
+        self.appearance = appearance
+        
         super.init(frame: .zero)
         commonInit()
     }
@@ -107,7 +109,7 @@ extension MovieDetailView {
 
 // MARK: - Appearance
 
-private extension MovieDetailView {
+extension MovieDetailView {
     struct Appearance {
         let backgroundColor: UIColor = .black
         let posterImageViewHeightMultiplier: CGFloat = 1.45

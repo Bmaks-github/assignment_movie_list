@@ -24,20 +24,10 @@ extension SearchService: SearchServiceProtocol {
         networkProvider.getData(
             with: "/movie",
             params: [
-                URLQueryItem(name: "query", value: movieName),
-                URLQueryItem(name: "page", value: page)
-            ]) { result in
-                switch result {
-                case let .success(data):
-                    do {
-                        let result = try JSONDecoder().decode(MovieSearchResult.self, from: data)
-                        completion(.success(result))
-                    } catch let jsonError as NSError {
-                        completion(.failure(jsonError))
-                    }
-                case let .failure(error):
-                    completion(.failure(error))
-                }
-            }
+                "query": movieName,
+                "page": page
+            ],
+            completion: completion
+        )
     }
 }

@@ -7,9 +7,9 @@
 
 struct MovieSearchResult: Codable {
     let page: Int
-    let results: [MovieDetail]?
     let totalResults: Int
     let totalPages: Int
+    let results: [MovieDetail]?
     
     enum CodingKeys: String, CodingKey {
         case page

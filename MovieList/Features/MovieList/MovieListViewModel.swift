@@ -17,7 +17,7 @@ final class MovieListViewModel {
     weak var view: MovieListViewProtocol?
     
     private let router: MovieListRouterProtocol
-    private let worker: MovieListWorkerProtocol
+    private let worker: MovieParamsParserProtocol
     private let genresService: GenresServiceProtocol
     private let movieListPaginator: MovieListPaginatorProtocol
     
@@ -28,7 +28,7 @@ final class MovieListViewModel {
     
     init(
         router: MovieListRouterProtocol,
-        worker: MovieListWorkerProtocol,
+        worker: MovieParamsParserProtocol,
         genresService: GenresServiceProtocol,
         movieListPaginator: MovieListPaginatorProtocol
     ) {
@@ -129,7 +129,9 @@ extension MovieListViewModel: MovieListViewModelProtocol {
         
         debounceTimer?.invalidate()
         debounceTimer = Timer.scheduledTimer(withTimeInterval: Constants.Debouncer.delayInSeconds, repeats: false) { [weak self]  _ in
-            self?.movieListPaginator.selectMode(mode: .searchMovie(text))
+            let mode: MovieListPaginator.Mode = text.isEmpty ? .popularMovies : .searchMovie(text)
+            
+            self?.movieListPaginator.selectMode(mode: mode)
             self?.movieListPaginator.fetchFirstMovies { result in
                 DispatchQueue.main.async {
                     switch result {

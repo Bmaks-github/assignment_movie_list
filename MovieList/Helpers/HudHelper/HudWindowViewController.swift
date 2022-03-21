@@ -9,8 +9,11 @@ import UIKit
 
 final class HudWindowViewController: UIViewController {
     private var mainRootViewController: UIViewController? {
-        let window = UIApplication.shared.keyWindow
-        return window?.rootViewController
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return nil }
+        
+        let window = UIWindow(windowScene: windowScene)
+        
+        return window.rootViewController
     }
 
     override var childForStatusBarStyle: UIViewController? {

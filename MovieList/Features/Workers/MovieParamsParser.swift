@@ -8,13 +8,13 @@
 import Foundation
 
 // sourcery: AutoMockable
-protocol MovieListWorkerProtocol {
+protocol MovieParamsParserProtocol {
     func getGenreNamesList(for genreIds: [Int], genresList: MovieGenresList?) -> String
     func getMarkBarValue(mark: Double) -> Float
     func getImageUrl(for posterPath: String?) -> URL?
 }
 
-final class MovieListWorker: MovieListWorkerProtocol {
+final class MovieParamsParser: MovieParamsParserProtocol {
     func getGenreNamesList(for genreIds: [Int], genresList: MovieGenresList?) -> String {
         var resultGenreList = [String?]()
         

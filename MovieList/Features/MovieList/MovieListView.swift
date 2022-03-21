@@ -6,7 +6,7 @@ import SnapKit
 import UIKit
 
 final class MovieListView: UIView {
-    private let appearance = Appearance()
+    private let appearance: Appearance
     private let viewModel: MovieListViewModelProtocol
     private var sections: [SectionSource] = []
     
@@ -31,9 +31,10 @@ final class MovieListView: UIView {
         $0.isHidden = true
     }
 
-    init(viewModel: MovieListViewModelProtocol) {
+    init(viewModel: MovieListViewModelProtocol, appearance: Appearance = .init()) {
         self.viewModel = viewModel
-
+        self.appearance = appearance
+        
         super.init(frame: .zero)
         commonInit()
     }
@@ -141,7 +142,7 @@ extension MovieListView {
 
 // MARK: - Appearance
 
-private extension MovieListView {
+extension MovieListView {
     struct Appearance {
         let tableViewLeadingOffset: CGFloat = 18.0
         let tableViewTrailingInset: CGFloat = .gap_M

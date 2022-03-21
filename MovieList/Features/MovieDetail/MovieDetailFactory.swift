@@ -13,7 +13,7 @@ final class MovieDetailFactory: MovieDetailFactoryProtocol {
         let transitionHandler = TransitionableProxy()
         
         let router = MovieDetailRouter(transitionHandler: transitionHandler)
-        let worker = MovieListWorker()
+        let worker = MovieParamsParser()
         
         let viewModel = MovieDetailViewModel(
             router: router,

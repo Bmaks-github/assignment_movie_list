@@ -9,11 +9,4 @@ import UIKit
 
 protocol TableViewAdaptableModelProtocol: Any {
     func cell(at path: IndexPath, for tableView: UITableView) -> UITableViewCell
-    func canSelect() -> Bool
-}
-
-extension TableViewAdaptableModelProtocol {
-    func canSelect() -> Bool {
-        return true
-    }
 }

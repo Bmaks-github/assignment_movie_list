@@ -177,7 +177,7 @@ public final class MovieListViewProtocolMock: MovieListViewProtocol {
     }
 
 }
-public final class MovieListWorkerProtocolMock: MovieListWorkerProtocol {
+public final class MovieParamsParserProtocolMock: MovieParamsParserProtocol {
     public init() {}
 
     //MARK: - getGenreNamesList

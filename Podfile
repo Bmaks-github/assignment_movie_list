@@ -16,9 +16,4 @@ target 'MovieList' do
     pod 'Quick'
     pod 'Sourcery'
   end
-
-  target 'MovieListUITests' do
-    # Pods for testing
-  end
-
 end

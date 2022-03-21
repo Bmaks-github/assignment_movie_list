@@ -17,7 +17,7 @@ final class NetworkProvider {
         queryItems.append(URLQueryItem(name: "api_key", value: Constants.Domain.apiKey))
     }
     
-    func getData(with path: String, params: [URLQueryItem]?, completion: @escaping ResultHandler<Data>) {
+    func getData<T: Decodable>(with path: String, params: Dictionary<String, String>?, completion: @escaping ResultHandler<T>) {
         guard let url = createUrl(path: path, params: params) else { return completion(.failure(NSError.commonError))}
         
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
@@ -25,17 +25,27 @@ final class NetworkProvider {
                 return completion(.failure(NSError.commonError))
             }
             
-            completion(.success(data))
+            do {
+                let result = try JSONDecoder().decode(T.self, from: data)
+                completion(.success(result))
+            } catch let jsonError as NSError {
+                completion(.failure(jsonError))
+            }
         }
 
         task.resume()
     }
     
-    private func createUrl(path: String, params: [URLQueryItem]?) -> URL? {
+    private func createUrl(path: String, params: Dictionary<String, String>?) -> URL? {
         var urlCompsCopy = urlComps
         var queryItemsCopy = queryItems
         
-        queryItemsCopy.append(contentsOf: params ?? [])
+        if let params = params {
+            params.forEach { (key, value) in
+                queryItemsCopy.append(.init(name: key, value: value))
+            }
+        }
+        
         urlCompsCopy?.path += path
         urlCompsCopy?.queryItems = queryItemsCopy
         

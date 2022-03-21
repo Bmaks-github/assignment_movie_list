@@ -17,7 +17,7 @@ final class MovieListFactory: MovieListFactoryProtocol {
         let moviesService = MoviesService()
         let genresService = GenresService()
         let movieListPaginator = MovieListPaginator(searchService: searchService, movieService: moviesService)
-        let movieListWorker = MovieListWorker()
+        let movieListWorker = MovieParamsParser()
         
         let viewModel = MovieListViewModel(
             router: router,
